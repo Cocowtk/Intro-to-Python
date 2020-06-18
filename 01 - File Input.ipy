@@ -1,0 +1,110 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jun 14 20:19:49 2020
+
+@author: Troy
+"""
+
+import pandas as pd
+
+# Read in csv file
+YT = pd.read_csv("yellow_tripdata_2017-06.csv")
+
+# !!!!!
+# If you run into trouble reading this file, use the line below:
+# YT = pd.read_csv("Yellow_Sample.csv")    
+
+# Look at DataFrame
+YT
+
+# DataFrames are cosntructed of columns called Series. To see columns:
+YT.columns
+
+# To subset a DataFrame, use column name to return a particular Series
+YT['VendorID']
+
+# To get rows, use row numbers
+YT[2:10]
+
+# Getting to know more about our data
+# Looking at dtypes
+YT.dtypes
+
+# Looking at one column at a time
+YT['tpep_pickup_datetime'].dtypes
+
+# Lookin at first or last few rows
+YT.head()
+YT.tail()
+
+# Can use all these commands on a single Series:
+YT['tpep_pickup_datetime'].head()
+
+# Can also use them on a subset of the DataFrame (which will be a DataFrame, too)
+YT[['total_amount','passenger_count']].head()
+
+# If you want other than head()'s default 5 rows:
+YT[['total_amount','passenger_count']].head(10)
+
+# To get statistics on numerical columns
+YT.describe()
+
+YT['trip_distance'].describe()
+
+# Still a little hard to read, so can use .apply:
+
+YT['trip_distance'].describe().apply("{0:.2f}".format)
+
+# Or can use pd.set_option to apply the format globally:
+pd.set_option('display.float_format', lambda x: '%.5f' % x)
+
+YT[['trip_distance','fare_amount']].describe()
+
+# Might sometime want to worry about memory usage with large sets
+YT.memory_usage(index=False)
+
+YT[['total_amount','VendorID']].dtypes
+
+YT[['total_amount','VendorID']].astype('category').memory_usage(deep=True)
+
+# Converting columns to more usable types
+
+YT[['tpep_pickup_datetime','tpep_dropoff_datetime']].dtypes
+
+YT['tpep_pickup_datetime'].head()
+
+YT['pickup'] = pd.to_datetime(YT['tpep_pickup_datetime'],
+                              infer_datetime_format=True)
+
+YT['pickup'].head()
+
+del YT['tpep_pickup_datetime']
+
+YT['dropoff'] = pd.to_datetime(YT['tpep_dropoff_datetime'],
+                              infer_datetime_format=True)
+
+del YT['tpep_dropoff_datetime']
+
+YT['duration'] = YT['dropoff'] - YT['pickup']
+
+YT[['pickup','dropoff','duration']].head()
+
+# Deleting rows ("observations") that we don't want/need
+
+YT['trip_distance'].describe()
+
+YT['valid'] = YT['trip_distance'] <= 100
+
+YT[['trip_distance','valid']].head()
+
+YT['trip_distance'].describe()
+
+YT = YT[YT.valid == True]
+
+YT['trip_distance'].describe()
+
+# Saving our altered data set
+
+YT.to_csv('Yellow_Saved.csv', index = False)
+
+

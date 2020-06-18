@@ -1,0 +1,24 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jun 17 19:49:12 2020
+
+@author: Troy
+"""
+import random
+import numpy as np
+
+values = [1,10,100,1_000,10_000,100_000,1_000_000]
+times_list = []
+times_array = []
+
+for i in range (0, 7):
+   print(f'Loop: {i}             Number of values: {values[i]:,}')
+   time_temp = %timeit -o rolls_list = [random.randrange(1, 7) for i in range(0, values[i])]
+   times_list.append(time_temp.average)
+   time_temp = %timeit -o rolls_array = np.random.randint(1, 7, values[i])
+   times_array.append(time_temp.average)
+   
+print(f'Number        List average     Array average')
+print(f'of values     execution time   execution time')
+for i in range (0,7):
+    print(f'{values[i]:>9,}       {times_list[i]:.8f}       {times_array[i]:.8f}') 
