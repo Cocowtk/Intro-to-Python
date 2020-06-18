@@ -13,7 +13,7 @@ YT = pd.read_csv("Yellow_Saved.csv")
 # Look at DataFrame
 YT
 
-# DataFrames are cosntructed of columns called Series. To see columns:
+# DataFrames are constructed of columns called Series. To see columns:
 YT.columns
 
 # Looking at dtypes
@@ -28,7 +28,7 @@ YT['pickup'] = pd.to_datetime(YT['pickup'],
 YT['dropoff'] = pd.to_datetime(YT['dropoff'],
                               infer_datetime_format=True)
 
-YT['uration'] = pd.to_datetime(YT['duration'],
+YT['duration'] = pd.to_datetime(YT['duration'],
                               infer_datetime_format=True)
 
 
@@ -60,8 +60,9 @@ YT['total_amount'].describe()
 
 # Rules we agree to
 # trip_distance <= 100 (already implemented)
-#  
-# 
-#
+# delete any rows where passengers = 0 
+# delete trip distance = 0
+# fare amount make greater than zero, lt 1,0000
+# make "extra" >= 0
 
 
