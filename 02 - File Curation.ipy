@@ -62,7 +62,7 @@ YT['total_amount'].describe()
 # trip_distance <= 100 (already implemented)
 # delete any rows where passengers = 0 
 # delete trip distance = 0
-# fare amount make greater than zero, lt 1,0000
+# fare amount make greater than zero, lt 1,000
 # make "extra" >= 0
 
 

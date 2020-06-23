@@ -1,0 +1,122 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jun 14 20:19:49 2020
+
+@author: Troy
+"""
+
+import pandas as pd
+
+# Use pd.set_option to apply the format globally:
+pd.set_option('display.float_format', lambda x: '%.5f' % x)
+
+# To disable "SettingWithCopyWarning..."
+pd.options.mode.chained_assignment = None  # default='warn'
+
+# Read in csv file
+YT = pd.read_csv("yellow_tripdata_2017-06.csv")
+
+# Converting pickup and dropoff times and calculating trip duration
+
+YT[['tpep_pickup_datetime','tpep_dropoff_datetime']].dtypes
+
+YT['pickup'] = pd.to_datetime(YT['tpep_pickup_datetime'],
+                              infer_datetime_format=True)
+
+del YT['tpep_pickup_datetime']
+
+YT['dropoff'] = pd.to_datetime(YT['tpep_dropoff_datetime'],
+                              infer_datetime_format=True)
+
+del YT['tpep_dropoff_datetime']
+
+YT['duration'] = YT['dropoff'] - YT['pickup']
+
+YT[['pickup','dropoff','duration']].head()
+
+# Curating trip_distance
+
+YT['trip_distance'].describe()
+
+YT['valid1'] = YT['trip_distance'] <= 100
+YT['valid2'] = YT['trip_distance'] > 0
+YT['valid'] = (YT['valid1'] & YT['valid2'])
+
+YT = YT[YT.valid == True]
+
+YT['trip_distance'].describe()
+
+del(YT['valid'],YT['valid1'],YT['valid2'])
+
+# Curating passenger_count
+
+YT['passenger_count'].describe()
+
+YT['valid'] = YT['passenger_count'] >= 1
+
+YT = YT[YT.valid == True]
+
+YT['trip_distance'].describe()
+
+YT['passenger_count'].describe()
+
+# Curating fare_amount
+
+YT['fare_amount'].describe()
+
+YT['valid1'] = YT['fare_amount'] < 1_000
+YT['valid2'] = YT['fare_amount'] > 0
+YT['valid'] = (YT['valid1'] & YT['valid2'])
+
+YT = YT[YT.valid == True]
+
+YT['fare_amount'].describe()
+
+del(YT['valid'],YT['valid1'],YT['valid2'])
+
+# Curating extra
+
+YT['extra'].describe()
+
+YT['valid'] = YT['extra'] >= 0
+
+YT = YT[YT.valid == True]
+
+YT['extra'].describe()
+
+
+# To see that this fixed some of the problems with other portions
+# of total fare being negative:
+    
+YT['mta_tax'].describe()
+
+YT['tolls_amount'].describe()
+
+YT['improvement_surcharge'].describe()
+
+YT['total_amount'].describe()
+
+# Choosing a random sample from YT to make it small enough for all of us
+
+YT = YT.sample(frac=0.01, replace=False, random_state=10)
+
+YT['total_amount'].describe()
+
+
+# open a file, where you want to store the data
+file = open('test', 'wb')
+
+# dump information to that file
+import pickle
+
+pickle.dump(YT, file)
+
+# close the file
+file.close()
+
+
+# Saving our altered data set
+
+YT.to_csv('YT_graph_set.csv', index = False)
+
+
